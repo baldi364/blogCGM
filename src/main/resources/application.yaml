@@ -1,0 +1,72 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: myblog
+
+    #Configurazione Database
+  datasource:
+    url: jdbc:mysql://${DATABASE_MYSQL_HOSTNAME}:${DATABASE_MYSQL_PORT}/${DATABASE_MYSQL_NAME}?ssl-mode=REQUIRED
+    username: ${DATABASE_MYSQL_USERNAME}
+    password: ${DATABASE_MYSQL_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  data:
+    jpa:
+      repositories:
+        # DEFAULT: i repositories vengono controllati all'avvio dell'applicazione
+        # DEFERRED: i repositories vengono controllati all'avvio ma in maniera asincrona
+        # LAZY: i repositories vengono controllati SOLO QUANDO sono richiamati
+        bootstrap-mode: DEFAULT
+
+  #JPA
+  jpa:
+    database: MYSQL
+    hibernate:
+      # Values:
+        # none : non viene apportata alcuna modifica al DB. Valore DA METTERE in produzione
+        # update: crea le tabelle ed i relativi campi sul DB qualora li non esistano.
+        #         Altresi modifica le tabelle esistenti aggiungendo solo i campi nuovi,
+        #         ma non modificando quelli preesistenti
+        # create-drop: crea le tabelle all'avvio dell'applicazione e ne fa il drop quando stoppo l'applicazione
+        # validated: confronta le classi (entita) con le tabelle: se trova discrepanze solleva un'eccezione
+      ddl-auto: update
+    properties:
+      dialect: org.hibernate.dialect.MySQLDialect
+    show-sql: true
+    open-in-view: false
+
+logging:
+  level:
+    '[it.cgmconsulting.myblog]': info
+    '[org.hibernate.orm.jdbc.bind]': trace
+    '[org.springframework.boot]': info
+
+spring-doc:
+  swagger-ui:
+    enabled: true
+    # hostname:port/swagger-ui-html = localhost:8081/swagger-ui.html
+    path: /swagger-ui.html
+
+# CUSTOM PROPERTIES
+application:
+  security:
+    jwt:
+      tokenType: Bearer
+      secret-key: WS27AFX7HWB8OEWUK6RW5F5C51MWDH57C2I6NDGZCBJ2306QBZISUL3KYAF9RM67
+      expiration: 86400000 # milliseconds -> 1 day
+
+# REGOLE PER INSERIMENTO AVATAR
+  avatar:
+    size: 10240
+    width: 100
+    height: 100
+    extensions: jpg,jpeg,png
+  contentImage:
+    size: 20480
+    width: 400
+    height: 200
+    extensions: jpeg,jpg
+    path: /Users/Public/myblog/images/
+  contentTypes: H,C,F
